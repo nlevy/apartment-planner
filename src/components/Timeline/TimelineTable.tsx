@@ -7,7 +7,7 @@ import styles from './Timeline.module.css';
 
 export const TimelineTable: React.FC = () => {
   const { state } = useAppContext();
-  const { t } = useTranslation();
+  const { t, translateCategory } = useTranslation();
 
   const timeline = generateTimeline(
     state.initialFunds,
@@ -49,7 +49,7 @@ export const TimelineTable: React.FC = () => {
               <tr key={index} className={isInitial ? styles.initialRow : ''}>
                 <td className={styles.dateColumn}>{formatDate(entry.date)}</td>
                 <td>{entry.description}</td>
-                <td>{entry.category || '-'}</td>
+                <td>{translateCategory(entry.category)}</td>
                 <td
                   className={`${styles.amountColumn} ${
                     entry.amount > 0

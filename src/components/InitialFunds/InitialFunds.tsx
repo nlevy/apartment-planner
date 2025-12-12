@@ -7,7 +7,7 @@ import styles from './InitialFunds.module.css';
 
 export const InitialFunds: React.FC = () => {
   const { state, updateInitialFunds } = useAppContext();
-  const { t } = useTranslation();
+  const { t, translateInitialFundsCategory } = useTranslation();
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
 
@@ -48,7 +48,7 @@ export const InitialFunds: React.FC = () => {
       <div className={styles.fundsList}>
         {Object.entries(state.initialFunds).map(([category, amount]) => (
           <div key={category} className={styles.fundItem}>
-            <span className={styles.fundLabel}>{category}:</span>
+            <span className={styles.fundLabel}>{translateInitialFundsCategory(category)}:</span>
             <input
               type="number"
               className={styles.fundInput}

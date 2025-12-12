@@ -9,7 +9,7 @@ import styles from './Transactions.module.css';
 
 export const TransactionsPanel: React.FC = () => {
   const { state, addTransaction, updateTransaction, deleteTransaction } = useAppContext();
-  const { t } = useTranslation();
+  const { t, translateCategory } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>();
 
@@ -89,8 +89,8 @@ export const TransactionsPanel: React.FC = () => {
                 )}
               </span>
 
-              <span className={styles.transactionCategory} title={transaction.category || '-'}>
-                {transaction.category || '-'}
+              <span className={styles.transactionCategory} title={translateCategory(transaction.category)}>
+                {translateCategory(transaction.category)}
               </span>
 
               <span className={styles.transactionAmount}>

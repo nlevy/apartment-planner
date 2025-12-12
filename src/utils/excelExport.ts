@@ -3,26 +3,57 @@ import { AppState, TimelineEntry } from '../types';
 import { formatCurrency, formatDate, formatCurrencyWithSign } from './formatters';
 import { calculateSummaryStats } from './calculations';
 
+interface ExcelTranslations {
+  appTitle: string;
+  prices: string;
+  buyPrice: string;
+  sellPrice: string;
+  notSet: string;
+  initialBalance: string;
+  totalInitial: string;
+  summaryTitle: string;
+  totalIncome: string;
+  totalPayments: string;
+  finalBalance: string;
+  summary: string;
+  timeline: string;
+  transactions: string;
+  date: string;
+  event: string;
+  category: string;
+  amount: string;
+  balance: string;
+  type: string;
+  description: string;
+  amountType: string;
+  percentageBase: string;
+  income: string;
+  payment: string;
+  amountTypeFixed: string;
+  amountTypePercentage: string;
+}
+
 export function exportToExcel(
   timeline: TimelineEntry[],
   state: AppState,
+  translations: ExcelTranslations,
   filename = 'apartment-plan.xlsx'
 ): void {
   const workbook = XLSX.utils.book_new();
 
-  const summarySheet = createSummarySheet(state);
-  XLSX.utils.book_append_sheet(workbook, summarySheet, 'סיכום');
+  const summarySheet = createSummarySheet(state, translations);
+  XLSX.utils.book_append_sheet(workbook, summarySheet, translations.summary);
 
-  const timelineSheet = createTimelineSheet(timeline);
-  XLSX.utils.book_append_sheet(workbook, timelineSheet, 'ציר זמן');
+  const timelineSheet = createTimelineSheet(timeline, translations);
+  XLSX.utils.book_append_sheet(workbook, timelineSheet, translations.timeline);
 
-  const transactionsSheet = createTransactionsSheet(state);
-  XLSX.utils.book_append_sheet(workbook, transactionsSheet, 'תנועות');
+  const transactionsSheet = createTransactionsSheet(state, translations);
+  XLSX.utils.book_append_sheet(workbook, transactionsSheet, translations.transactions);
 
   XLSX.writeFile(workbook, filename);
 }
 
-function createSummarySheet(state: AppState): XLSX.WorkSheet {
+function createSummarySheet(state: AppState, translations: ExcelTranslations): XLSX.WorkSheet {
   const stats = calculateSummaryStats(
     state.initialFunds,
     state.transactions,
@@ -30,13 +61,13 @@ function createSummarySheet(state: AppState): XLSX.WorkSheet {
   );
 
   const data: string[][] = [
-    ['מתכנן קניית ומכירת דירה'],
+    [translations.appTitle],
     [''],
-    ['מחירים'],
-    ['מחיר קניה', state.priceConfig.buyPrice !== null ? formatCurrency(state.priceConfig.buyPrice) : 'לא הוגדר'],
-    ['מחיר מכירה', state.priceConfig.sellPrice !== null ? formatCurrency(state.priceConfig.sellPrice) : 'לא הוגדר'],
+    [translations.prices],
+    [translations.buyPrice, state.priceConfig.buyPrice !== null ? formatCurrency(state.priceConfig.buyPrice) : translations.notSet],
+    [translations.sellPrice, state.priceConfig.sellPrice !== null ? formatCurrency(state.priceConfig.sellPrice) : translations.notSet],
     [''],
-    ['יתרה התחלתית'],
+    [translations.initialBalance],
   ];
 
   Object.entries(state.initialFunds).forEach(([category, amount]) => {
@@ -44,12 +75,12 @@ function createSummarySheet(state: AppState): XLSX.WorkSheet {
   });
 
   data.push(
-    ['סה"כ יתרה התחלתית', formatCurrency(stats.totalInitial)],
+    [translations.totalInitial, formatCurrency(stats.totalInitial)],
     [''],
-    ['סיכום'],
-    ['סה"כ הכנסות', formatCurrency(stats.totalIncome)],
-    ['סה"כ תשלומים', formatCurrency(stats.totalPayments)],
-    ['יתרה סופית', formatCurrency(stats.finalBalance)]
+    [translations.summaryTitle],
+    [translations.totalIncome, formatCurrency(stats.totalIncome)],
+    [translations.totalPayments, formatCurrency(stats.totalPayments)],
+    [translations.finalBalance, formatCurrency(stats.finalBalance)]
   );
 
   const worksheet = XLSX.utils.aoa_to_sheet(data);
@@ -62,8 +93,14 @@ function createSummarySheet(state: AppState): XLSX.WorkSheet {
   return worksheet;
 }
 
-function createTimelineSheet(timeline: TimelineEntry[]): XLSX.WorkSheet {
-  const headers = ['תאריך', 'אירוע', 'קטגוריה', 'סכום', 'יתרה'];
+function createTimelineSheet(timeline: TimelineEntry[], translations: ExcelTranslations): XLSX.WorkSheet {
+  const headers = [
+    translations.date,
+    translations.event,
+    translations.category,
+    translations.amount,
+    translations.balance
+  ];
 
   const data = timeline.map(entry => [
     formatDate(entry.date),
@@ -86,8 +123,16 @@ function createTimelineSheet(timeline: TimelineEntry[]): XLSX.WorkSheet {
   return worksheet;
 }
 
-function createTransactionsSheet(state: AppState): XLSX.WorkSheet {
-  const headers = ['תאריך', 'סוג', 'תיאור', 'קטגוריה', 'סכום', 'סוג סכום', 'בסיס אחוז'];
+function createTransactionsSheet(state: AppState, translations: ExcelTranslations): XLSX.WorkSheet {
+  const headers = [
+    translations.date,
+    translations.type,
+    translations.description,
+    translations.category,
+    translations.amount,
+    translations.amountType,
+    translations.percentageBase
+  ];
 
   const data = state.transactions.map(transaction => {
     let amountDisplay: string;
@@ -97,14 +142,24 @@ function createTransactionsSheet(state: AppState): XLSX.WorkSheet {
       amountDisplay = `${transaction.amount}%`;
     }
 
+    const typeLabel = transaction.type === 'income' ? translations.income : translations.payment;
+    const amountTypeLabel = transaction.amountType === 'fixed' ? translations.amountTypeFixed : translations.amountTypePercentage;
+
+    let percentageBaseLabel = '-';
+    if (transaction.percentageBase === 'buy') {
+      percentageBaseLabel = translations.buyPrice;
+    } else if (transaction.percentageBase === 'sell') {
+      percentageBaseLabel = translations.sellPrice;
+    }
+
     return [
       formatDate(transaction.date),
-      transaction.type === 'income' ? 'הכנסה' : 'תשלום',
+      typeLabel,
       transaction.description || '-',
       transaction.category || '-',
       amountDisplay,
-      transaction.amountType === 'fixed' ? 'קבוע' : 'אחוז',
-      transaction.percentageBase === 'buy' ? 'מחיר קניה' : (transaction.percentageBase === 'sell' ? 'מחיר מכירה' : '-')
+      amountTypeLabel,
+      percentageBaseLabel
     ];
   });
 

@@ -24,7 +24,38 @@ export const Toolbar: React.FC = () => {
         payment: t('transactions.payment')
       }
     );
-    exportToExcel(timeline, state);
+
+    const excelTranslations = {
+      appTitle: t('common.appTitle'),
+      prices: t('excel.prices'),
+      buyPrice: t('priceConfig.buyPrice'),
+      sellPrice: t('priceConfig.sellPrice'),
+      notSet: t('excel.notSet'),
+      initialBalance: t('initialFunds.title'),
+      totalInitial: t('excel.totalInitial'),
+      summaryTitle: t('excel.summaryTitle'),
+      totalIncome: t('excel.totalIncome'),
+      totalPayments: t('excel.totalPayments'),
+      finalBalance: t('excel.finalBalance'),
+      summary: t('excel.summary'),
+      timeline: t('excel.timeline'),
+      transactions: t('excel.transactions'),
+      date: t('common.date'),
+      event: t('excel.event'),
+      category: t('transactions.category'),
+      amount: t('transactions.amount'),
+      balance: t('timeline.balance'),
+      type: t('transactions.type'),
+      description: t('transactions.description'),
+      amountType: t('transactions.amountType'),
+      percentageBase: t('excel.percentageBase'),
+      income: t('transactions.income'),
+      payment: t('transactions.payment'),
+      amountTypeFixed: t('excel.amountTypeFixed'),
+      amountTypePercentage: t('excel.amountTypePercentage'),
+    };
+
+    exportToExcel(timeline, state, excelTranslations);
   };
 
   const handleExportJSON = () => {

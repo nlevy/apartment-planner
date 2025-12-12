@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionType, AmountType, PercentageBase, Installment } from '../../types';
 import { formatDateForInput } from '../../utils/formatters';
 import { InstallmentList } from './InstallmentList';
+import { useTranslation } from '../../i18n';
 import styles from './Transactions.module.css';
 
 interface TransactionFormProps {
@@ -11,23 +12,25 @@ interface TransactionFormProps {
   onCancel: () => void;
 }
 
-const COMMON_CATEGORIES = [
-  'תשלום ראשוני',
-  'תשלום',
-  'דמי תיווך',
-  'מס רכישה',
-  'משכנתא',
-  'עורך דין',
-  'שיפוצים',
-  'ארנונה',
-  'אחר'
-];
-
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   transaction,
   onSubmit,
   onCancel
 }) => {
+  const { t } = useTranslation();
+
+  const CATEGORY_KEYS = [
+    'downPayment',
+    'payment',
+    'brokerage',
+    'purchaseTax',
+    'mortgage',
+    'lawyer',
+    'renovation',
+    'municipalTax',
+    'other'
+  ];
+
   const [type, setType] = useState<TransactionType>(transaction?.type || 'payment');
   const [date, setDate] = useState(
     transaction?.date ? formatDateForInput(transaction.date) : formatDateForInput(new Date())
@@ -50,7 +53,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     // Validate installments if in installment mode
     if (isInstallment) {
       if (installments.length === 0) {
-        alert('יש להוסיף לפחות תשלום אחד');
+        alert(t('messages.addAtLeastOneInstallment'));
         return;
       }
 
@@ -60,7 +63,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       );
 
       if (Math.abs(totalPercentage - 100) >= 0.01) {
-        alert('סכום האחוזים חייב להיות 100% בדיוק');
+        alert(t('messages.totalPercentageMustBe100'));
         return;
       }
     }
@@ -84,7 +87,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.formGroup}>
-        <label className={styles.label}>סוג</label>
+        <label className={styles.label}>{t('transactions.type')}</label>
         <div className={styles.radioGroup}>
           <label className={styles.radioOption}>
             <input
@@ -93,7 +96,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               checked={type === 'payment'}
               onChange={(e) => setType(e.target.value as TransactionType)}
             />
-            <span>תשלום</span>
+            <span>{t('transactions.payment')}</span>
           </label>
           <label className={styles.radioOption}>
             <input
@@ -102,14 +105,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               checked={type === 'income'}
               onChange={(e) => setType(e.target.value as TransactionType)}
             />
-            <span>הכנסה</span>
+            <span>{t('transactions.income')}</span>
           </label>
         </div>
       </div>
 
       <div className={styles.formGroup}>
         <label className={styles.label} htmlFor="date">
-          {isInstallment ? 'תאריך התחלה' : 'תאריך'}
+          {isInstallment ? t('transactions.startDate') : t('transactions.date')}
         </label>
         <input
           id="date"
@@ -127,12 +130,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             checked={isInstallment}
             onChange={(e) => setIsInstallment(e.target.checked)}
           />
-          <span>פריסה לתשלומים</span>
+          <span>{t('transactions.installments')}</span>
         </label>
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.label}>סוג סכום</label>
+        <label className={styles.label}>{t('transactions.amountType')}</label>
         <div className={styles.radioGroup}>
           <label className={styles.radioOption}>
             <input
@@ -141,7 +144,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               checked={amountType === 'fixed'}
               onChange={(e) => setAmountType(e.target.value as AmountType)}
             />
-            <span>סכום קבוע</span>
+            <span>{t('transactions.fixedAmount')}</span>
           </label>
           <label className={styles.radioOption}>
             <input
@@ -150,7 +153,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               checked={amountType === 'percentage'}
               onChange={(e) => setAmountType(e.target.value as AmountType)}
             />
-            <span>אחוז</span>
+            <span>{t('transactions.percentageAmount')}</span>
           </label>
         </div>
       </div>
@@ -158,7 +161,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {amountType === 'fixed' ? (
         <div className={styles.formGroup}>
           <label className={styles.label} htmlFor="amount">
-            סכום (₪)
+            {t('transactions.amount')}
           </label>
           <input
             id="amount"
@@ -174,7 +177,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         <>
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="percentage">
-              אחוז (%)
+              {t('transactions.percentage')}
             </label>
             <input
               id="percentage"
@@ -189,15 +192,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           </div>
           <div className={styles.formGroup}>
             <label className={styles.label} htmlFor="percentageBase">
-              בסיס החישוב
+              {t('transactions.percentageBase')}
             </label>
             <select
               id="percentageBase"
               value={percentageBase}
               onChange={(e) => setPercentageBase(e.target.value as PercentageBase)}
             >
-              <option value="buy">מחיר קניה</option>
-              <option value="sell">מחיר מכירה</option>
+              <option value="buy">{t('priceConfig.buyPrice')}</option>
+              <option value="sell">{t('priceConfig.sellPrice')}</option>
             </select>
           </div>
         </>
@@ -205,17 +208,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       <div className={styles.formGroup}>
         <label className={styles.label} htmlFor="category">
-          קטגוריה
+          {t('transactions.category')}
         </label>
         <select
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option value="">בחר קטגוריה</option>
-          {COMMON_CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+          <option value="">{t('transactions.selectCategory')}</option>
+          {CATEGORY_KEYS.map((key) => (
+            <option key={key} value={key}>
+              {t(`transactions.categories.${key}`)}
             </option>
           ))}
         </select>
@@ -223,14 +226,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       <div className={styles.formGroup}>
         <label className={styles.label} htmlFor="description">
-          תיאור
+          {t('transactions.description')}
         </label>
         <input
           id="description"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="תיאור התנועה..."
+          placeholder={t('transactions.description')}
         />
       </div>
 
@@ -245,10 +248,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       <div className={styles.formActions}>
         <button type="button" className={styles.cancelButton} onClick={onCancel}>
-          ביטול
+          {t('common.cancel')}
         </button>
         <button type="submit" className={styles.submitButton}>
-          {transaction ? 'עדכן' : 'הוסף'}
+          {transaction ? t('common.update') : t('common.add')}
         </button>
       </div>
     </form>

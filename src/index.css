@@ -33,7 +33,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-background);
   color: var(--color-text);
-  direction: rtl;
 }
 
 input,
@@ -42,7 +41,6 @@ select,
 textarea {
   font-family: inherit;
   font-size: inherit;
-  direction: rtl;
 }
 
 button {

@@ -97,4 +97,20 @@ export interface Translations {
     addAtLeastOneInstallment: string;
     totalPercentageMustBe100: string;
   };
+  excel: {
+    summary: string;
+    timeline: string;
+    transactions: string;
+    prices: string;
+    notSet: string;
+    totalInitial: string;
+    summaryTitle: string;
+    totalIncome: string;
+    totalPayments: string;
+    finalBalance: string;
+    event: string;
+    amountTypeFixed: string;
+    amountTypePercentage: string;
+    percentageBase: string;
+  };
 }

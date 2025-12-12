@@ -33,5 +33,25 @@ export function useTranslation() {
     return getNestedValue(translation, key);
   };
 
-  return { t };
+  // Translate transaction category keys (downPayment, brokerage, etc.)
+  const translateCategory = (categoryKey: string | undefined): string => {
+    if (!categoryKey) return '-';
+
+    const translationKey = `transactions.categories.${categoryKey}`;
+    const translated = getNestedValue(translations[language], translationKey);
+
+    // If translation not found, return the original key (for backward compatibility)
+    return translated !== translationKey ? translated : categoryKey;
+  };
+
+  // Translate initial funds category keys (cash, stocks, other, or custom)
+  const translateInitialFundsCategory = (categoryKey: string): string => {
+    const translationKey = `initialFunds.${categoryKey}`;
+    const translated = getNestedValue(translations[language], translationKey);
+
+    // If translation not found, return the original key (custom category)
+    return translated !== translationKey ? translated : categoryKey;
+  };
+
+  return { t, translateCategory, translateInitialFundsCategory };
 }
