@@ -86,8 +86,8 @@ export const en: Translations = {
   },
   toolbar: {
     exportExcel: 'Export to Excel',
-    exportJSON: 'Export JSON',
-    importJSON: 'Import JSON',
+    exportJSON: 'Save',
+    importJSON: 'Load',
     reset: 'Reset',
     theme: 'Theme',
     language: 'Language',

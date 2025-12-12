@@ -86,8 +86,8 @@ export const he: Translations = {
   },
   toolbar: {
     exportExcel: 'ייצוא לאקסל',
-    exportJSON: 'ייצוא JSON',
-    importJSON: 'ייבוא JSON',
+    exportJSON: 'ייצוא',
+    importJSON: 'ייבוא',
     reset: 'איפוס',
     theme: 'ערכת נושא',
     language: 'שפה',
