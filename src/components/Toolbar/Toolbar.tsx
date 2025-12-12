@@ -78,8 +78,7 @@ export const Toolbar: React.FC = () => {
 
         // Confirm before overriding current data
         const hasCurrentData = state.transactions.length > 0 ||
-                               state.initialFunds.cash > 0 ||
-                               state.initialFunds.savings > 0;
+                               Object.values(state.initialFunds).some(amount => amount > 0);
 
         if (hasCurrentData) {
           const confirmImport = window.confirm(t('messages.confirmImport'));
