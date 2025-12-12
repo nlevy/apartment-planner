@@ -41,9 +41,9 @@ const getInitialState = (): AppState => {
       sellPrice: null
     },
     initialFunds: {
-      'מזומן': 0,
-      'מניות': 0,
-      'אחר': 0
+      'cash': 0,
+      'stocks': 0,
+      'other': 0
     },
     transactions: []
   };
@@ -120,8 +120,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const resetState = () => {
-    setState(getInitialState());
     localStorage.removeItem('apate2-state');
+    setState(getInitialState());
   };
 
   const value: AppContextType = {

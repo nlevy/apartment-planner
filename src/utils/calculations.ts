@@ -27,11 +27,23 @@ export function sortTransactionsByDate(transactions: Transaction[]): Transaction
   return [...transactions].sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
+interface TimelineTranslations {
+  initialBalance: string;
+  income: string;
+  payment: string;
+}
+
 export function generateTimeline(
   initialFunds: InitialFunds,
   transactions: Transaction[],
-  priceConfig: PriceConfig
+  priceConfig: PriceConfig,
+  translations?: TimelineTranslations
 ): TimelineEntry[] {
+  const t = translations || {
+    initialBalance: 'יתרה התחלתית',
+    income: 'הכנסה',
+    payment: 'תשלום'
+  };
   const entries: TimelineEntry[] = [];
 
   const totalInitial = calculateTotalInitialFunds(initialFunds);
@@ -56,7 +68,7 @@ export function generateTimeline(
 
         expandedEntries.push({
           date: installment.date,
-          description: `${transaction.description || (transaction.type === 'income' ? 'הכנסה' : 'תשלום')} (${installment.percentage}%)`,
+          description: `${transaction.description || (transaction.type === 'income' ? t.income : t.payment)} (${installment.percentage}%)`,
           category: transaction.category,
           amount: signedAmount
         });
@@ -67,7 +79,7 @@ export function generateTimeline(
 
       expandedEntries.push({
         date: transaction.date,
-        description: transaction.description || (transaction.type === 'income' ? 'הכנסה' : 'תשלום'),
+        description: transaction.description || (transaction.type === 'income' ? t.income : t.payment),
         category: transaction.category,
         amount: signedAmount
       });
@@ -77,7 +89,7 @@ export function generateTimeline(
   if (expandedEntries.length === 0) {
     entries.push({
       date: new Date(),
-      description: 'יתרה התחלתית',
+      description: t.initialBalance,
       amount: totalInitial,
       runningBalance: balance
     });
@@ -90,7 +102,7 @@ export function generateTimeline(
 
   entries.push({
     date: new Date(firstDate.getTime() - 1),
-    description: 'יתרה התחלתית',
+    description: t.initialBalance,
     amount: totalInitial,
     runningBalance: balance
   });

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Installment } from '../../types';
+import { useTranslation } from '../../i18n';
 import styles from './InstallmentList.module.css';
 
 interface InstallmentListProps {
@@ -11,6 +12,7 @@ export const InstallmentList: React.FC<InstallmentListProps> = ({
   installments,
   onChange,
 }) => {
+  const { t } = useTranslation();
   const [newDate, setNewDate] = useState<string>('');
   const [newPercentage, setNewPercentage] = useState<string>('');
 
@@ -23,13 +25,13 @@ export const InstallmentList: React.FC<InstallmentListProps> = ({
 
   const handleAdd = () => {
     if (!newDate || !newPercentage) {
-      alert('נא למלא תאריך ואחוז');
+      alert(t('transactions.fillDateAndPercentage'));
       return;
     }
 
     const percentage = parseFloat(newPercentage);
     if (isNaN(percentage) || percentage <= 0 || percentage > 100) {
-      alert('אחוז חייב להיות בין 0 ל-100');
+      alert(t('transactions.percentageMustBeBetween'));
       return;
     }
 
@@ -76,9 +78,9 @@ export const InstallmentList: React.FC<InstallmentListProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <span>תשלומי פריסה</span>
+        <span>{t('transactions.installmentPayments')}</span>
         <span className={totalPercentage === 0 ? styles.neutral : isValid ? styles.valid : styles.invalid}>
-          סה"כ: {totalPercentage.toFixed(1)}%
+          {t('transactions.total')}: {totalPercentage.toFixed(1)}%
           {totalPercentage > 0 && (isValid ? ' ✓' : ' ✗')}
         </span>
       </div>
@@ -127,14 +129,14 @@ export const InstallmentList: React.FC<InstallmentListProps> = ({
           value={newDate}
           onChange={(e) => setNewDate(e.target.value)}
           className={styles.dateInput}
-          placeholder="תאריך"
+          placeholder={t('transactions.installmentDate')}
         />
         <input
           type="number"
           value={newPercentage}
           onChange={(e) => setNewPercentage(e.target.value)}
           className={styles.percentageInput}
-          placeholder="אחוז"
+          placeholder={t('transactions.installmentPercentage')}
           min="0"
           max="100"
           step="0.1"
@@ -145,13 +147,13 @@ export const InstallmentList: React.FC<InstallmentListProps> = ({
           onClick={handleAdd}
           className={styles.addButton}
         >
-          + הוסף
+          + {t('common.add')}
         </button>
       </div>
 
       {!isValid && totalPercentage > 0 && (
         <div className={styles.warning}>
-          סכום האחוזים חייב להיות 100% בדיוק
+          {t('transactions.totalMustBe100')}
         </div>
       )}
     </div>

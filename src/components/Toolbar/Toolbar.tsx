@@ -3,20 +3,61 @@ import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
 import { exportToExcel } from '../../utils/excelExport';
 import { downloadJSON, importFromJSON } from '../../utils/storage';
-import { ThemeSelector } from './ThemeSelector';
+import { Settings } from '../Settings/Settings';
+import { useTranslation } from '../../i18n';
+import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import styles from './Toolbar.module.css';
 
 export const Toolbar: React.FC = () => {
   const { state, loadState, resetState } = useAppContext();
+  const { t } = useTranslation();
+  const { currencySymbol } = useCurrencyFormatter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportExcel = () => {
     const timeline = generateTimeline(
       state.initialFunds,
       state.transactions,
-      state.priceConfig
+      state.priceConfig,
+      {
+        initialBalance: t('timeline.initialBalance'),
+        income: t('transactions.income'),
+        payment: t('transactions.payment')
+      }
     );
-    exportToExcel(timeline, state);
+
+    const excelTranslations = {
+      appTitle: t('common.appTitle'),
+      prices: t('excel.prices'),
+      buyPrice: t('priceConfig.buyPrice'),
+      sellPrice: t('priceConfig.sellPrice'),
+      notSet: t('excel.notSet'),
+      initialBalance: t('initialFunds.title'),
+      totalInitial: t('excel.totalInitial'),
+      summaryTitle: t('excel.summaryTitle'),
+      totalIncome: t('excel.totalIncome'),
+      totalPayments: t('excel.totalPayments'),
+      finalBalance: t('excel.finalBalance'),
+      summary: t('excel.summary'),
+      timeline: t('excel.timeline'),
+      transactions: t('excel.transactions'),
+      date: t('common.date'),
+      event: t('excel.event'),
+      category: t('transactions.category'),
+      amount: t('transactions.amount'),
+      balance: t('timeline.balance'),
+      type: t('transactions.type'),
+      description: t('transactions.description'),
+      amountType: t('transactions.amountType'),
+      percentageBase: t('excel.percentageBase'),
+      income: t('transactions.income'),
+      payment: t('transactions.payment'),
+      amountTypeFixed: t('excel.amountTypeFixed'),
+      amountTypePercentage: t('excel.amountTypePercentage'),
+      currencySymbol: currencySymbol,
+    };
+
+    exportToExcel(timeline, state, excelTranslations);
   };
 
   const handleExportJSON = () => {
@@ -39,22 +80,19 @@ export const Toolbar: React.FC = () => {
 
         // Confirm before overriding current data
         const hasCurrentData = state.transactions.length > 0 ||
-                               state.initialFunds.cash > 0 ||
-                               state.initialFunds.savings > 0;
+                               Object.values(state.initialFunds).some(amount => amount > 0);
 
         if (hasCurrentData) {
-          const confirmImport = window.confirm(
-            'ייבוא הקובץ ידרוס את כל הנתונים הנוכחיים. האם להמשיך?'
-          );
+          const confirmImport = window.confirm(t('messages.confirmImport'));
           if (!confirmImport) {
             return;
           }
         }
 
         loadState(imported);
-        alert('הנתונים יובאו בהצלחה!');
+        alert(t('messages.importSuccess'));
       } catch (error) {
-        alert('שגיאה בייבוא הקובץ. אנא ודא שהקובץ תקין.');
+        alert(t('messages.importError'));
         console.error('Import error:', error);
       }
     };
@@ -66,11 +104,7 @@ export const Toolbar: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (
-      window.confirm(
-        'האם אתה בטוח שברצונך לאפס את כל הנתונים? פעולה זו לא ניתנת לביטול.'
-      )
-    ) {
+    if (window.confirm(t('messages.confirmReset'))) {
       resetState();
     }
   };
@@ -83,25 +117,25 @@ export const Toolbar: React.FC = () => {
         className={`${styles.button} ${styles.exportButton}`}
         onClick={handleExportExcel}
         disabled={!hasData}
-        title="ייצוא לאקסל"
+        title={t('toolbar.exportExcel')}
       >
-        📊 ייצוא לאקסל
+        📊 {t('toolbar.exportExcel')}
       </button>
 
       <button
         className={styles.button}
         onClick={handleExportJSON}
-        title="ייצוא ל-JSON"
+        title={t('toolbar.exportJSON')}
       >
-        💾 ייצוא JSON
+        💾 {t('toolbar.exportJSON')}
       </button>
 
       <button
         className={`${styles.button} ${styles.importButton}`}
         onClick={handleImportClick}
-        title="ייבוא מ-JSON"
+        title={t('toolbar.importJSON')}
       >
-        📁 ייבוא JSON
+        📁 {t('toolbar.importJSON')}
       </button>
 
       <input
@@ -112,15 +146,15 @@ export const Toolbar: React.FC = () => {
         className={styles.fileInput}
       />
 
-      <ThemeSelector />
-
       <button
         className={`${styles.button} ${styles.resetButton}`}
         onClick={handleReset}
-        title="איפוס כל הנתונים"
+        title={t('toolbar.reset')}
       >
-        🗑️ איפוס
+        🗑️ {t('toolbar.reset')}
       </button>
+
+      <Settings />
     </div>
   );
 };
