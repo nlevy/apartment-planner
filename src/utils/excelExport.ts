@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import { AppState, TimelineEntry } from '../types';
-import { formatCurrency, formatDate, formatCurrencyWithSign } from './formatters';
+import { formatDate } from './formatters';
 import { calculateSummaryStats } from './calculations';
 
 interface ExcelTranslations {
@@ -31,6 +31,7 @@ interface ExcelTranslations {
   payment: string;
   amountTypeFixed: string;
   amountTypePercentage: string;
+  currencySymbol: string;
 }
 
 export function exportToExcel(
@@ -39,21 +40,52 @@ export function exportToExcel(
   translations: ExcelTranslations,
   filename = 'apartment-plan.xlsx'
 ): void {
+  // Helper functions to format currency with the provided symbol
+  const formatCurrency = (amount: number): string => {
+    const formatted = new Intl.NumberFormat('he-IL', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Math.abs(amount));
+
+    const sign = amount < 0 ? '-' : '';
+    return `${sign}${formatted}${translations.currencySymbol}`;
+  };
+
+  const formatCurrencyWithSign = (amount: number): string => {
+    const formatted = new Intl.NumberFormat('he-IL', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Math.abs(amount));
+
+    if (amount > 0) {
+      return `+${formatted}${translations.currencySymbol}`;
+    } else if (amount < 0) {
+      return `-${formatted}${translations.currencySymbol}`;
+    }
+    return `${formatted}${translations.currencySymbol}`;
+  };
+
   const workbook = XLSX.utils.book_new();
 
-  const summarySheet = createSummarySheet(state, translations);
+  const summarySheet = createSummarySheet(state, translations, formatCurrency);
   XLSX.utils.book_append_sheet(workbook, summarySheet, translations.summary);
 
-  const timelineSheet = createTimelineSheet(timeline, translations);
+  const timelineSheet = createTimelineSheet(timeline, translations, formatCurrency, formatCurrencyWithSign);
   XLSX.utils.book_append_sheet(workbook, timelineSheet, translations.timeline);
 
-  const transactionsSheet = createTransactionsSheet(state, translations);
+  const transactionsSheet = createTransactionsSheet(state, translations, formatCurrency);
   XLSX.utils.book_append_sheet(workbook, transactionsSheet, translations.transactions);
 
   XLSX.writeFile(workbook, filename);
 }
 
-function createSummarySheet(state: AppState, translations: ExcelTranslations): XLSX.WorkSheet {
+function createSummarySheet(
+  state: AppState,
+  translations: ExcelTranslations,
+  formatCurrency: (amount: number) => string
+): XLSX.WorkSheet {
   const stats = calculateSummaryStats(
     state.initialFunds,
     state.transactions,
@@ -93,7 +125,12 @@ function createSummarySheet(state: AppState, translations: ExcelTranslations): X
   return worksheet;
 }
 
-function createTimelineSheet(timeline: TimelineEntry[], translations: ExcelTranslations): XLSX.WorkSheet {
+function createTimelineSheet(
+  timeline: TimelineEntry[],
+  translations: ExcelTranslations,
+  formatCurrency: (amount: number) => string,
+  formatCurrencyWithSign: (amount: number) => string
+): XLSX.WorkSheet {
   const headers = [
     translations.date,
     translations.event,
@@ -123,7 +160,11 @@ function createTimelineSheet(timeline: TimelineEntry[], translations: ExcelTrans
   return worksheet;
 }
 
-function createTransactionsSheet(state: AppState, translations: ExcelTranslations): XLSX.WorkSheet {
+function createTransactionsSheet(
+  state: AppState,
+  translations: ExcelTranslations,
+  formatCurrency: (amount: number) => string
+): XLSX.WorkSheet {
   const headers = [
     translations.date,
     translations.type,

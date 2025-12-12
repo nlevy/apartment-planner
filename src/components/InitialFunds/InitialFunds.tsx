@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { calculateTotalInitialFunds } from '../../utils/calculations';
-import { formatCurrency } from '../../utils/formatters';
+import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
 import styles from './InitialFunds.module.css';
 
 export const InitialFunds: React.FC = () => {
   const { state, updateInitialFunds } = useAppContext();
   const { t, translateInitialFundsCategory } = useTranslation();
+  const { formatCurrency } = useCurrencyFormatter();
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
 

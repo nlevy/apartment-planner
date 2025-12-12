@@ -12,7 +12,8 @@ import {
 } from 'recharts';
 import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
-import { formatDate, formatCurrency } from '../../utils/formatters';
+import { formatDate } from '../../utils/formatters';
+import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
 import styles from './Graph.module.css';
 
@@ -28,9 +29,10 @@ interface CustomTooltipProps {
       runningBalance: number;
     };
   }>;
+  formatCurrency: (amount: number) => string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, formatCurrency }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -59,6 +61,7 @@ const formatYAxis = (value: number): string => {
 export const BalanceGraph: React.FC = () => {
   const { state } = useAppContext();
   const { t } = useTranslation();
+  const { formatCurrency } = useCurrencyFormatter();
   const [xAxisMode, setXAxisMode] = useState<XAxisMode>('event');
 
   const timeline = generateTimeline(
@@ -178,7 +181,7 @@ export const BalanceGraph: React.FC = () => {
               width={65}
               tick={{ dx: -5 }}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} />} />
             <Legend
               wrapperStyle={{ fontSize: '12px' }}
               formatter={() => t('graph.balance')}

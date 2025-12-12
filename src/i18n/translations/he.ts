@@ -38,7 +38,7 @@ export const he: Translations = {
     income: 'הכנסה',
     date: 'תאריך',
     startDate: 'תאריך התחלה',
-    amount: 'סכום (₪)',
+    amount: 'סכום',
     percentage: 'אחוז (%)',
     description: 'תיאור',
     category: 'קטגוריה',

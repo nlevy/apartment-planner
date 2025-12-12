@@ -5,11 +5,13 @@ import { exportToExcel } from '../../utils/excelExport';
 import { downloadJSON, importFromJSON } from '../../utils/storage';
 import { Settings } from '../Settings/Settings';
 import { useTranslation } from '../../i18n';
+import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import styles from './Toolbar.module.css';
 
 export const Toolbar: React.FC = () => {
   const { state, loadState, resetState } = useAppContext();
   const { t } = useTranslation();
+  const { currencySymbol } = useCurrencyFormatter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportExcel = () => {
@@ -52,6 +54,7 @@ export const Toolbar: React.FC = () => {
       payment: t('transactions.payment'),
       amountTypeFixed: t('excel.amountTypeFixed'),
       amountTypePercentage: t('excel.amountTypePercentage'),
+      currencySymbol: currencySymbol,
     };
 
     exportToExcel(timeline, state, excelTranslations);
