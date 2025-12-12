@@ -91,6 +91,8 @@ export const en: Translations = {
     reset: 'Reset',
     theme: 'Theme',
     language: 'Language',
+    currency: 'Currency',
+    settings: 'Settings',
   },
   theme: {
     light: 'Light',

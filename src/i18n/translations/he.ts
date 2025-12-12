@@ -91,6 +91,8 @@ export const he: Translations = {
     reset: 'איפוס',
     theme: 'ערכת נושא',
     language: 'שפה',
+    currency: 'מטבע',
+    settings: 'הגדרות',
   },
   theme: {
     light: 'בהיר',

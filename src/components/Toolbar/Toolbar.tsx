@@ -3,8 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
 import { exportToExcel } from '../../utils/excelExport';
 import { downloadJSON, importFromJSON } from '../../utils/storage';
-import { ThemeSelector } from './ThemeSelector';
-import { LanguageSelector } from './LanguageSelector';
+import { Settings } from '../Settings/Settings';
 import { useTranslation } from '../../i18n';
 import styles from './Toolbar.module.css';
 
@@ -144,10 +143,6 @@ export const Toolbar: React.FC = () => {
         className={styles.fileInput}
       />
 
-      <ThemeSelector />
-
-      <LanguageSelector />
-
       <button
         className={`${styles.button} ${styles.resetButton}`}
         onClick={handleReset}
@@ -155,6 +150,8 @@ export const Toolbar: React.FC = () => {
       >
         🗑️ {t('toolbar.reset')}
       </button>
+
+      <Settings />
     </div>
   );
 };
