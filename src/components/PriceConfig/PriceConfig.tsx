@@ -1,9 +1,11 @@
 import React from 'react';
 import { useAppContext } from '../../context/AppContext';
+import { useTranslation } from '../../i18n';
 import styles from './PriceConfig.module.css';
 
 export const PriceConfig: React.FC = () => {
   const { state, updatePriceConfig } = useAppContext();
+  const { t } = useTranslation();
 
   const handleBuyPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -19,7 +21,7 @@ export const PriceConfig: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.field}>
         <label className={styles.label} htmlFor="buyPrice">
-          מחיר קניה
+          {t('priceConfig.buyPrice')}
         </label>
         <input
           id="buyPrice"
@@ -35,7 +37,7 @@ export const PriceConfig: React.FC = () => {
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="sellPrice">
-          מחיר מכירה
+          {t('priceConfig.sellPrice')}
         </label>
         <input
           id="sellPrice"

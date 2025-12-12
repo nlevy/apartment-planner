@@ -4,10 +4,12 @@ import { Transaction } from '../../types';
 import { TransactionForm } from './TransactionForm';
 import { formatDate, formatCurrency, formatPercentage } from '../../utils/formatters';
 import { sortTransactionsByDate, calculateTransactionAmount } from '../../utils/calculations';
+import { useTranslation } from '../../i18n';
 import styles from './Transactions.module.css';
 
 export const TransactionsPanel: React.FC = () => {
   const { state, addTransaction, updateTransaction, deleteTransaction } = useAppContext();
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>();
 
@@ -24,7 +26,7 @@ export const TransactionsPanel: React.FC = () => {
   };
 
   const handleDeleteClick = (id: string) => {
-    if (window.confirm('האם אתה בטוח שברצונך למחוק תנועה זו?')) {
+    if (window.confirm(t('transactions.deleteConfirm'))) {
       deleteTransaction(id);
     }
   };
@@ -56,12 +58,12 @@ export const TransactionsPanel: React.FC = () => {
   return (
     <div className={styles.container}>
       <button className={styles.addButton} onClick={handleAddClick}>
-        + הוסף תנועה
+        + {t('transactions.addTransaction')}
       </button>
 
       {sortedTransactions.length === 0 ? (
         <div className={styles.emptyState}>
-          אין תנועות עדיין. לחץ על "הוסף תנועה" כדי להתחיל.
+          {t('transactions.emptyState')}
         </div>
       ) : (
         <div className={styles.transactionsList}>
@@ -71,7 +73,7 @@ export const TransactionsPanel: React.FC = () => {
                 className={`${styles.transactionType} ${
                   transaction.type === 'income' ? styles.income : styles.payment
                 }`}
-                title={transaction.type === 'income' ? 'הכנסה' : 'תשלום'}
+                title={transaction.type === 'income' ? t('transactions.income') : t('transactions.payment')}
               >
                 {transaction.type === 'income' ? '↑' : '↓'}
               </span>
@@ -81,7 +83,7 @@ export const TransactionsPanel: React.FC = () => {
               <span className={styles.transactionDescription} title={transaction.description || ''}>
                 {transaction.description || '-'}
                 {transaction.isInstallment && transaction.installments && (
-                  <span className={styles.installmentBadge} title={`פרוס ל-${transaction.installments.length} תשלומים`}>
+                  <span className={styles.installmentBadge} title={t('transactions.installmentBadge').replace('{count}', transaction.installments.length.toString())}>
                     {' '}📅×{transaction.installments.length}
                   </span>
                 )}
@@ -99,14 +101,14 @@ export const TransactionsPanel: React.FC = () => {
                 <button
                   className={styles.editButton}
                   onClick={() => handleEditClick(transaction)}
-                  title="ערוך"
+                  title={t('common.edit')}
                 >
                   ✎
                 </button>
                 <button
                   className={styles.deleteButton}
                   onClick={() => handleDeleteClick(transaction.id)}
-                  title="מחק"
+                  title={t('common.delete')}
                 >
                   ✕
                 </button>
@@ -120,7 +122,7 @@ export const TransactionsPanel: React.FC = () => {
         <div className={styles.modal} onClick={handleCancel}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              {editingTransaction ? 'ערוך תנועה' : 'הוסף תנועה'}
+              {editingTransaction ? t('transactions.editTransaction') : t('transactions.addTransaction')}
             </div>
             <TransactionForm
               transaction={editingTransaction}

@@ -13,6 +13,7 @@ import {
 import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
 import { formatDate, formatCurrency } from '../../utils/formatters';
+import { useTranslation } from '../../i18n';
 import styles from './Graph.module.css';
 
 type XAxisMode = 'event' | 'date';
@@ -57,19 +58,25 @@ const formatYAxis = (value: number): string => {
 
 export const BalanceGraph: React.FC = () => {
   const { state } = useAppContext();
+  const { t } = useTranslation();
   const [xAxisMode, setXAxisMode] = useState<XAxisMode>('event');
 
   const timeline = generateTimeline(
     state.initialFunds,
     state.transactions,
-    state.priceConfig
+    state.priceConfig,
+    {
+      initialBalance: t('timeline.initialBalance'),
+      income: t('transactions.income'),
+      payment: t('transactions.payment')
+    }
   );
 
   if (timeline.length === 0) {
     return (
       <div className={styles.container}>
         <div className={styles.emptyState}>
-          אין נתונים להצגה. הוסף יתרה התחלתית ותנועות כדי לראות את הגרף.
+          {t('graph.emptyState')}
         </div>
       </div>
     );
@@ -123,7 +130,7 @@ export const BalanceGraph: React.FC = () => {
       <div className={styles.controls}>
         <div className={styles.toggleContainer}>
           <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
-            אירוע
+            {t('common.event')}
           </span>
           <label className={styles.toggleSwitch}>
             <input
@@ -135,7 +142,7 @@ export const BalanceGraph: React.FC = () => {
             <span className={styles.toggleSlider}></span>
           </label>
           <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
-            תאריך
+            {t('common.date')}
           </span>
         </div>
       </div>
@@ -174,7 +181,7 @@ export const BalanceGraph: React.FC = () => {
             <Tooltip content={<CustomTooltip />} />
             <Legend
               wrapperStyle={{ fontSize: '12px' }}
-              formatter={() => 'יתרה'}
+              formatter={() => t('graph.balance')}
             />
             <ReferenceLine y={0} stroke="#F44336" strokeDasharray="3 3" />
             <Line
@@ -184,7 +191,7 @@ export const BalanceGraph: React.FC = () => {
               strokeWidth={2}
               dot={{ fill: '#2196F3', r: 4 }}
               activeDot={{ r: 6 }}
-              name="יתרה"
+              name={t('graph.balance')}
             />
           </LineChart>
         </ResponsiveContainer>

@@ -2,21 +2,28 @@ import React from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
 import { formatDate, formatCurrencyWithSign, formatCurrency } from '../../utils/formatters';
+import { useTranslation } from '../../i18n';
 import styles from './Timeline.module.css';
 
 export const TimelineTable: React.FC = () => {
   const { state } = useAppContext();
+  const { t } = useTranslation();
 
   const timeline = generateTimeline(
     state.initialFunds,
     state.transactions,
-    state.priceConfig
+    state.priceConfig,
+    {
+      initialBalance: t('timeline.initialBalance'),
+      income: t('transactions.income'),
+      payment: t('transactions.payment')
+    }
   );
 
   if (timeline.length === 0) {
     return (
       <div className={styles.emptyState}>
-        אין נתונים להצגה. הוסף יתרה התחלתית ותנועות כדי לראות את ציר הזמן.
+        {t('timeline.emptyState')}
       </div>
     );
   }
@@ -26,11 +33,11 @@ export const TimelineTable: React.FC = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.dateColumn}>תאריך</th>
-            <th>אירוע</th>
-            <th>קטגוריה</th>
-            <th className={styles.amountColumn}>סכום</th>
-            <th className={styles.balanceColumn}>יתרה</th>
+            <th className={styles.dateColumn}>{t('timeline.date')}</th>
+            <th>{t('timeline.description')}</th>
+            <th>{t('transactions.category')}</th>
+            <th className={styles.amountColumn}>{t('timeline.amount')}</th>
+            <th className={styles.balanceColumn}>{t('timeline.balance')}</th>
           </tr>
         </thead>
         <tbody>

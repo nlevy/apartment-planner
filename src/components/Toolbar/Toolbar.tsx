@@ -4,17 +4,25 @@ import { generateTimeline } from '../../utils/calculations';
 import { exportToExcel } from '../../utils/excelExport';
 import { downloadJSON, importFromJSON } from '../../utils/storage';
 import { ThemeSelector } from './ThemeSelector';
+import { LanguageSelector } from './LanguageSelector';
+import { useTranslation } from '../../i18n';
 import styles from './Toolbar.module.css';
 
 export const Toolbar: React.FC = () => {
   const { state, loadState, resetState } = useAppContext();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportExcel = () => {
     const timeline = generateTimeline(
       state.initialFunds,
       state.transactions,
-      state.priceConfig
+      state.priceConfig,
+      {
+        initialBalance: t('timeline.initialBalance'),
+        income: t('transactions.income'),
+        payment: t('transactions.payment')
+      }
     );
     exportToExcel(timeline, state);
   };
@@ -43,18 +51,16 @@ export const Toolbar: React.FC = () => {
                                state.initialFunds.savings > 0;
 
         if (hasCurrentData) {
-          const confirmImport = window.confirm(
-            'ייבוא הקובץ ידרוס את כל הנתונים הנוכחיים. האם להמשיך?'
-          );
+          const confirmImport = window.confirm(t('messages.confirmImport'));
           if (!confirmImport) {
             return;
           }
         }
 
         loadState(imported);
-        alert('הנתונים יובאו בהצלחה!');
+        alert(t('messages.importSuccess'));
       } catch (error) {
-        alert('שגיאה בייבוא הקובץ. אנא ודא שהקובץ תקין.');
+        alert(t('messages.importError'));
         console.error('Import error:', error);
       }
     };
@@ -66,11 +72,7 @@ export const Toolbar: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (
-      window.confirm(
-        'האם אתה בטוח שברצונך לאפס את כל הנתונים? פעולה זו לא ניתנת לביטול.'
-      )
-    ) {
+    if (window.confirm(t('messages.confirmReset'))) {
       resetState();
     }
   };
@@ -83,25 +85,25 @@ export const Toolbar: React.FC = () => {
         className={`${styles.button} ${styles.exportButton}`}
         onClick={handleExportExcel}
         disabled={!hasData}
-        title="ייצוא לאקסל"
+        title={t('toolbar.exportExcel')}
       >
-        📊 ייצוא לאקסל
+        📊 {t('toolbar.exportExcel')}
       </button>
 
       <button
         className={styles.button}
         onClick={handleExportJSON}
-        title="ייצוא ל-JSON"
+        title={t('toolbar.exportJSON')}
       >
-        💾 ייצוא JSON
+        💾 {t('toolbar.exportJSON')}
       </button>
 
       <button
         className={`${styles.button} ${styles.importButton}`}
         onClick={handleImportClick}
-        title="ייבוא מ-JSON"
+        title={t('toolbar.importJSON')}
       >
-        📁 ייבוא JSON
+        📁 {t('toolbar.importJSON')}
       </button>
 
       <input
@@ -114,12 +116,14 @@ export const Toolbar: React.FC = () => {
 
       <ThemeSelector />
 
+      <LanguageSelector />
+
       <button
         className={`${styles.button} ${styles.resetButton}`}
         onClick={handleReset}
-        title="איפוס כל הנתונים"
+        title={t('toolbar.reset')}
       >
-        🗑️ איפוס
+        🗑️ {t('toolbar.reset')}
       </button>
     </div>
   );

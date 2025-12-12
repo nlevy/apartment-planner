@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { calculateTotalInitialFunds } from '../../utils/calculations';
 import { formatCurrency } from '../../utils/formatters';
+import { useTranslation } from '../../i18n';
 import styles from './InitialFunds.module.css';
 
 export const InitialFunds: React.FC = () => {
   const { state, updateInitialFunds } = useAppContext();
+  const { t } = useTranslation();
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
 
@@ -58,7 +60,7 @@ export const InitialFunds: React.FC = () => {
             <button
               className={styles.deleteButton}
               onClick={() => handleDeleteCategory(category)}
-              title="מחק"
+              title={t('common.delete')}
             >
               ✕
             </button>
@@ -72,7 +74,7 @@ export const InitialFunds: React.FC = () => {
             type="text"
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
-            placeholder="שם הקטגוריה"
+            placeholder={t('initialFunds.addCategory')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleAddCategory();
@@ -91,12 +93,12 @@ export const InitialFunds: React.FC = () => {
         </div>
       ) : (
         <button className={styles.addButton} onClick={() => setIsAddingCategory(true)}>
-          + הוסף קטגוריה
+          + {t('initialFunds.addCategory')}
         </button>
       )}
 
       <div className={styles.total}>
-        <span>סה"כ:</span>
+        <span>{t('initialFunds.total')}:</span>
         <span>{formatCurrency(total)}</span>
       </div>
     </div>
