@@ -1,0 +1,101 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-lg);
+}
+
+.header {
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 250px 1fr 1fr;
+  gap: var(--spacing-lg);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.panel h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.panelFixed {
+  flex-shrink: 0;
+}
+
+.panelScrollable {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.scrollContainer {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.graphContainer {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.graphContainer h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: var(--spacing-md);
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .graphContainer {
+    height: 250px;
+  }
+}

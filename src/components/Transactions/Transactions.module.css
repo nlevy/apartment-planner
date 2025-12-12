@@ -1,0 +1,232 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+}
+
+.addButton {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.addButton:hover {
+  background-color: #1976D2;
+}
+
+.transactionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.transactionItem {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  display: grid;
+  grid-template-columns: 16px 65px 1fr 100px 120px 50px;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  transition: background-color 0.15s;
+}
+
+.transactionItem:hover {
+  background-color: var(--color-background);
+}
+
+.transactionType {
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.income {
+  color: var(--color-income);
+}
+
+.payment {
+  color: var(--color-payment);
+}
+
+.transactionDate {
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.transactionDescription {
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.installmentBadge {
+  font-size: 10px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.transactionCategory {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+}
+
+.transactionAmount {
+  color: var(--color-text);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.transactionActions {
+  display: flex;
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.editButton,
+.deleteButton {
+  padding: 2px 4px;
+  font-size: 11px;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+  background-color: white;
+  transition: all 0.15s;
+  min-width: 18px;
+}
+
+.editButton:hover {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.deleteButton:hover {
+  background-color: var(--color-payment);
+  color: white;
+  border-color: var(--color-payment);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.modalHeader {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.radioGroup {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.radioOption input[type="radio"] {
+  width: auto;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 14px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+}
+
+.submitButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cancelButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}

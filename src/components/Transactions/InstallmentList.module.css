@@ -1,0 +1,115 @@
+.container {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.valid {
+  color: var(--color-income);
+}
+
+.invalid {
+  color: var(--color-payment);
+}
+
+.neutral {
+  color: var(--color-text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+.installmentItem {
+  display: grid;
+  grid-template-columns: 1fr 80px 20px 30px;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.addSection {
+  display: grid;
+  grid-template-columns: 1fr 80px 20px auto;
+  gap: var(--spacing-xs);
+  align-items: center;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.dateInput {
+  padding: 4px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 12px;
+}
+
+.percentageInput {
+  padding: 4px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 12px;
+  text-align: right;
+}
+
+.percentSign {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.deleteButton {
+  padding: 2px 6px;
+  border: none;
+  background-color: var(--color-payment);
+  color: white;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.deleteButton:hover {
+  opacity: 0.8;
+}
+
+.addButton {
+  padding: 4px 8px;
+  border: none;
+  background-color: var(--color-income);
+  color: white;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  opacity: 0.8;
+}
+
+.warning {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs);
+  background-color: rgba(239, 83, 80, 0.1);
+  border: 1px solid var(--color-payment);
+  border-radius: var(--border-radius);
+  color: var(--color-payment);
+  font-size: 12px;
+  text-align: center;
+}

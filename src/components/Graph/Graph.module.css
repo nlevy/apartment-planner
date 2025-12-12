@@ -1,0 +1,117 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  gap: var(--spacing-sm);
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.toggleLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.toggleLabel.active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.toggleInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-primary);
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggleInput:checked + .toggleSlider:before {
+  transform: translateX(20px);
+}
+
+.toggleSwitch:hover .toggleSlider {
+  opacity: 0.9;
+}
+
+.graphWrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  text-align: center;
+}
+
+.tooltip {
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.tooltipLabel {
+  font-weight: bold;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.tooltipValue {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.tooltipDescription {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  margin-top: 2px;
+}

@@ -1,0 +1,72 @@
+.container {
+  height: 100%;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background-color: var(--color-surface);
+  z-index: 10;
+}
+
+.table th {
+  padding: var(--spacing-sm);
+  text-align: right;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid var(--color-border);
+  background-color: var(--color-background);
+}
+
+.table td {
+  padding: var(--spacing-sm);
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:hover {
+  background-color: var(--color-background);
+}
+
+.dateColumn {
+  white-space: nowrap;
+}
+
+.amountColumn {
+  font-weight: 500;
+}
+
+.balanceColumn {
+  font-weight: 600;
+}
+
+.positiveAmount {
+  color: var(--color-income);
+}
+
+.negativeAmount {
+  color: var(--color-payment);
+}
+
+.negativeBalance {
+  color: var(--color-negative);
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.initialRow {
+  background-color: var(--color-background);
+  font-weight: 500;
+}
