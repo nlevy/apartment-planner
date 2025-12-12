@@ -15,6 +15,7 @@ import { generateTimeline } from '../../utils/calculations';
 import { formatDate } from '../../utils/formatters';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
+import { useLocale } from '../../context/LocaleContext';
 import styles from './Graph.module.css';
 
 type XAxisMode = 'event' | 'date';
@@ -62,6 +63,7 @@ export const BalanceGraph: React.FC = () => {
   const { state } = useAppContext();
   const { t } = useTranslation();
   const { formatCurrency } = useCurrencyFormatter();
+  const { language } = useLocale();
   const [xAxisMode, setXAxisMode] = useState<XAxisMode>('event');
 
   const timeline = generateTimeline(
@@ -132,21 +134,43 @@ export const BalanceGraph: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.controls}>
         <div className={styles.toggleContainer}>
-          <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
-            {t('common.event')}
-          </span>
-          <label className={styles.toggleSwitch}>
-            <input
-              type="checkbox"
-              checked={xAxisMode === 'date'}
-              onChange={toggleXAxisMode}
-              className={styles.toggleInput}
-            />
-            <span className={styles.toggleSlider}></span>
-          </label>
-          <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
-            {t('common.date')}
-          </span>
+          {language === 'he' ? (
+            <>
+              <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
+                {t('common.date')}
+              </span>
+              <label className={styles.toggleSwitch}>
+                <input
+                  type="checkbox"
+                  checked={xAxisMode === 'date'}
+                  onChange={toggleXAxisMode}
+                  className={styles.toggleInput}
+                />
+                <span className={styles.toggleSlider}></span>
+              </label>
+              <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
+                {t('common.event')}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
+                {t('common.event')}
+              </span>
+              <label className={styles.toggleSwitch}>
+                <input
+                  type="checkbox"
+                  checked={xAxisMode === 'date'}
+                  onChange={toggleXAxisMode}
+                  className={styles.toggleInput}
+                />
+                <span className={styles.toggleSlider}></span>
+              </label>
+              <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
+                {t('common.date')}
+              </span>
+            </>
+          )}
         </div>
       </div>
       <div className={styles.graphWrapper}>
