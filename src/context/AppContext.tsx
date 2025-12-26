@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AppState, PriceConfig, InitialFunds, Transaction } from '../types';
+import { AppState, PriceConfig, InitialFunds, Transaction, Checkpoint } from '../types';
 
 interface AppContextType {
   state: AppState;
@@ -10,6 +10,8 @@ interface AppContextType {
   deleteTransaction: (id: string) => void;
   loadState: (newState: AppState) => void;
   resetState: () => void;
+  setCheckpoint: (checkpoint: Checkpoint) => void;
+  clearCheckpoint: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -28,7 +30,11 @@ const getInitialState = (): AppState => {
             ...inst,
             date: new Date(inst.date)
           }))
-        }))
+        })),
+        checkpoint: parsed.checkpoint ? {
+          date: new Date(parsed.checkpoint.date),
+          balance: parsed.checkpoint.balance
+        } : undefined
       };
     } catch (e) {
       console.error('Failed to parse saved state:', e);
@@ -67,7 +73,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             ...inst,
             date: inst.date.toISOString()
           }))
-        }))
+        })),
+        checkpoint: state.checkpoint ? {
+          date: state.checkpoint.date.toISOString(),
+          balance: state.checkpoint.balance
+        } : undefined
       };
       localStorage.setItem('apate2-state', JSON.stringify(toSave));
     }, 500);
@@ -124,6 +134,20 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setState(getInitialState());
   };
 
+  const setCheckpoint = (checkpoint: Checkpoint) => {
+    setState(prev => ({
+      ...prev,
+      checkpoint
+    }));
+  };
+
+  const clearCheckpoint = () => {
+    setState(prev => ({
+      ...prev,
+      checkpoint: undefined
+    }));
+  };
+
   const value: AppContextType = {
     state,
     updatePriceConfig,
@@ -132,7 +156,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     updateTransaction,
     deleteTransaction,
     loadState,
-    resetState
+    resetState,
+    setCheckpoint,
+    clearCheckpoint
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

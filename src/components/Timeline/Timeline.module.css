@@ -70,3 +70,25 @@
   background-color: var(--color-background);
   font-weight: 500;
 }
+
+.archivedRow {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.archivedRow td {
+  color: var(--color-text-secondary);
+}
+
+.checkpointRow {
+  background-color: var(--color-background);
+  font-weight: 600;
+  border-top: 3px solid var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+.checkpointRow td {
+  color: var(--color-primary);
+  padding-top: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+}

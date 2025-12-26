@@ -18,8 +18,10 @@ export const TimelineTable: React.FC = () => {
     {
       initialBalance: t('timeline.initialBalance'),
       income: t('transactions.income'),
-      payment: t('transactions.payment')
-    }
+      payment: t('transactions.payment'),
+      checkpoint: t('timeline.checkpoint')
+    },
+    state.checkpoint
   );
 
   if (timeline.length === 0) {
@@ -46,11 +48,22 @@ export const TimelineTable: React.FC = () => {
           {timeline.map((entry, index) => {
             const isInitial = index === 0;
             const isNegativeBalance = entry.runningBalance < 0;
+            const isArchived = entry.isArchived;
+            const isCheckpoint = entry.isCheckpoint;
+
+            const rowClasses = [
+              isInitial ? styles.initialRow : '',
+              isArchived ? styles.archivedRow : '',
+              isCheckpoint ? styles.checkpointRow : ''
+            ].filter(Boolean).join(' ');
 
             return (
-              <tr key={index} className={isInitial ? styles.initialRow : ''}>
+              <tr key={index} className={rowClasses}>
                 <td className={styles.dateColumn}>{formatDate(entry.date)}</td>
-                <td>{entry.description}</td>
+                <td>
+                  {isCheckpoint && '📍 '}
+                  {entry.description}
+                </td>
                 <td>{translateCategory(entry.category)}</td>
                 <td
                   className={`${styles.amountColumn} ${

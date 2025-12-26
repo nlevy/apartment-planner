@@ -75,6 +75,7 @@ export const he: Translations = {
     amount: 'סכום',
     balance: 'יתרה',
     initialBalance: 'יתרה התחלתית',
+    checkpoint: 'נקודת ביקורת',
     emptyState: 'אין נתונים להצגה',
   },
   graph: {
@@ -93,6 +94,8 @@ export const he: Translations = {
     language: 'שפה',
     currency: 'מטבע',
     settings: 'הגדרות',
+    createCheckpoint: 'צור נקודת ביקורת',
+    clearCheckpoint: 'מחק נקודת ביקורת',
   },
   theme: {
     light: 'בהיר',
@@ -105,6 +108,16 @@ export const he: Translations = {
     confirmReset: 'האם אתה בטוח שברצונך לאפס את כל הנתונים? פעולה זו לא ניתנת לביטול.',
     addAtLeastOneInstallment: 'יש להוסיף לפחות תשלום אחד',
     totalPercentageMustBe100: 'סכום האחוזים חייב להיות 100% בדיוק',
+    confirmClearCheckpoint: 'האם אתה בטוח שברצונך למחוק את נקודת הביקורת? פעולה זו תסיר את נקודת התיאום של היתרה.',
+    checkpointCreated: 'נקודת ביקורת נוצרה בהצלחה!',
+    checkpointCleared: 'נקודת ביקורת נמחקה בהצלחה!',
+  },
+  checkpoint: {
+    title: 'יצירת נקודת ביקורת',
+    currentBalance: 'יתרה בפועל נוכחית',
+    checkpointDate: 'תאריך נקודת הביקורת',
+    create: 'צור',
+    description: 'הגדר את יתרתך בפועל כדי לתאם עם המציאות. תנועות עבר יועברו לארכיון אך יישארו גלויות.',
   },
   excel: {
     summary: 'סיכום',

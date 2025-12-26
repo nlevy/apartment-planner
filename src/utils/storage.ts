@@ -1,4 +1,4 @@
-import { AppState, Transaction } from '../types';
+import { AppState, Transaction, Checkpoint } from '../types';
 
 const STORAGE_KEY = 'apate2-state';
 const STORAGE_VERSION = '1.0';
@@ -14,6 +14,10 @@ interface SerializedState {
     [key: string]: number;
   };
   transactions: Array<Omit<Transaction, 'date'> & { date: string }>;
+  checkpoint?: {
+    date: string;
+    balance: number;
+  };
 }
 
 export function saveToLocalStorage(state: AppState): void {
@@ -78,7 +82,11 @@ export function exportToJSON(state: AppState): string {
         ...inst,
         date: inst.date.toISOString()
       }))
-    }))
+    })),
+    checkpoint: state.checkpoint ? {
+      date: state.checkpoint.date.toISOString(),
+      balance: state.checkpoint.balance
+    } : undefined
   };
   return JSON.stringify(serialized, null, 2);
 }
@@ -97,7 +105,11 @@ export function importFromJSON(json: string): AppState {
           ...inst,
           date: new Date(inst.date)
         }))
-      }))
+      })),
+      checkpoint: parsed.checkpoint ? {
+        date: new Date(parsed.checkpoint.date),
+        balance: parsed.checkpoint.balance
+      } : undefined
     };
   } catch (error) {
     throw new Error('Invalid JSON format');

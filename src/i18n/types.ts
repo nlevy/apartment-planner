@@ -68,6 +68,7 @@ export interface Translations {
     amount: string;
     balance: string;
     initialBalance: string;
+    checkpoint: string;
     emptyState: string;
   };
   graph: {
@@ -84,6 +85,8 @@ export interface Translations {
     reset: string;
     theme: string;
     language: string;
+    createCheckpoint: string;
+    clearCheckpoint: string;
   };
   theme: {
     light: string;
@@ -96,6 +99,16 @@ export interface Translations {
     confirmReset: string;
     addAtLeastOneInstallment: string;
     totalPercentageMustBe100: string;
+    confirmClearCheckpoint: string;
+    checkpointCreated: string;
+    checkpointCleared: string;
+  };
+  checkpoint: {
+    title: string;
+    currentBalance: string;
+    checkpointDate: string;
+    create: string;
+    description: string;
   };
   excel: {
     summary: string;

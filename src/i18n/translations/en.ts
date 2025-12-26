@@ -75,6 +75,7 @@ export const en: Translations = {
     amount: 'Amount',
     balance: 'Balance',
     initialBalance: 'Initial Balance',
+    checkpoint: 'Checkpoint',
     emptyState: 'No data to display',
   },
   graph: {
@@ -93,6 +94,8 @@ export const en: Translations = {
     language: 'Language',
     currency: 'Currency',
     settings: 'Settings',
+    createCheckpoint: 'Create Checkpoint',
+    clearCheckpoint: 'Clear Checkpoint',
   },
   theme: {
     light: 'Light',
@@ -105,6 +108,16 @@ export const en: Translations = {
     confirmReset: 'Are you sure you want to reset all data? This action cannot be undone.',
     addAtLeastOneInstallment: 'Please add at least one installment',
     totalPercentageMustBe100: 'Total percentage must be exactly 100%',
+    confirmClearCheckpoint: 'Are you sure you want to clear the checkpoint? This will remove the balance reconciliation point.',
+    checkpointCreated: 'Checkpoint created successfully!',
+    checkpointCleared: 'Checkpoint cleared successfully!',
+  },
+  checkpoint: {
+    title: 'Create Checkpoint',
+    currentBalance: 'Current Actual Balance',
+    checkpointDate: 'Checkpoint Date',
+    create: 'Create',
+    description: 'Set your actual current balance to reconcile with reality. Past transactions will be archived but remain visible.',
   },
   excel: {
     summary: 'Summary',

@@ -55,6 +55,9 @@ export const Toolbar: React.FC = () => {
       amountTypeFixed: t('excel.amountTypeFixed'),
       amountTypePercentage: t('excel.amountTypePercentage'),
       currencySymbol: currencySymbol,
+      checkpoint: t('timeline.checkpoint'),
+      checkpointDate: t('checkpoint.checkpointDate'),
+      checkpointBalance: t('checkpoint.currentBalance'),
     };
 
     exportToExcel(timeline, state, excelTranslations);

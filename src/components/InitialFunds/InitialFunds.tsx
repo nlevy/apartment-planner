@@ -3,14 +3,17 @@ import { useAppContext } from '../../context/AppContext';
 import { calculateTotalInitialFunds } from '../../utils/calculations';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
+import { CheckpointDialog } from '../Settings/CheckpointDialog';
+import { formatDate } from '../../utils/formatters';
 import styles from './InitialFunds.module.css';
 
 export const InitialFunds: React.FC = () => {
-  const { state, updateInitialFunds } = useAppContext();
+  const { state, updateInitialFunds, clearCheckpoint } = useAppContext();
   const { t, translateInitialFundsCategory } = useTranslation();
   const { formatCurrency } = useCurrencyFormatter();
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [showCheckpointDialog, setShowCheckpointDialog] = useState(false);
 
   const handleAmountChange = (category: string, value: string) => {
     const amount = value ? parseFloat(value) : 0;
@@ -43,6 +46,19 @@ export const InitialFunds: React.FC = () => {
   };
 
   const total = calculateTotalInitialFunds(state.initialFunds);
+
+  const handleCreateCheckpoint = () => {
+    setShowCheckpointDialog(true);
+  };
+
+  const handleClearCheckpoint = () => {
+    if (window.confirm(t('messages.confirmClearCheckpoint'))) {
+      clearCheckpoint();
+      alert(t('messages.checkpointCleared'));
+    }
+  };
+
+  const hasData = state.transactions.length > 0;
 
   return (
     <div className={styles.container}>
@@ -102,6 +118,54 @@ export const InitialFunds: React.FC = () => {
         <span>{t('initialFunds.total')}:</span>
         <span>{formatCurrency(total)}</span>
       </div>
+
+      <div className={styles.checkpointSection}>
+        {state.checkpoint ? (
+          <div className={styles.checkpointInfo}>
+            <div className={styles.checkpointHeader}>
+              <span className={styles.checkpointIcon}>📍</span>
+              <span className={styles.checkpointTitle}>{t('timeline.checkpoint')}</span>
+            </div>
+            <div className={styles.checkpointDetails}>
+              <div className={styles.checkpointDetail}>
+                <span className={styles.checkpointLabel}>{t('checkpoint.checkpointDate')}:</span>
+                <span>{formatDate(state.checkpoint.date)}</span>
+              </div>
+              <div className={styles.checkpointDetail}>
+                <span className={styles.checkpointLabel}>{t('checkpoint.currentBalance')}:</span>
+                <span>{formatCurrency(state.checkpoint.balance)}</span>
+              </div>
+            </div>
+            <div className={styles.checkpointActions}>
+              <button
+                className={styles.updateCheckpointButton}
+                onClick={handleCreateCheckpoint}
+              >
+                {t('common.edit')}
+              </button>
+              <button
+                className={styles.clearCheckpointButton}
+                onClick={handleClearCheckpoint}
+              >
+                {t('common.delete')}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            className={styles.createCheckpointButton}
+            onClick={handleCreateCheckpoint}
+            disabled={!hasData}
+            title={!hasData ? t('transactions.emptyState') : ''}
+          >
+            📍 {t('toolbar.createCheckpoint')}
+          </button>
+        )}
+      </div>
+
+      {showCheckpointDialog && (
+        <CheckpointDialog onClose={() => setShowCheckpointDialog(false)} />
+      )}
     </div>
   );
 };
