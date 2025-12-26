@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import { calculateTotalInitialFunds } from '../../utils/calculations';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
-import { CheckpointDialog } from '../Settings/CheckpointDialog';
+import { CheckpointDialog } from './CheckpointDialog';
 import { formatDate } from '../../utils/formatters';
 import styles from './InitialFunds.module.css';
 

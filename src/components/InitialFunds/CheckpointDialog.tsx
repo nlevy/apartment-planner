@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import { generateTimeline, calculateTotalInitialFunds } from '../../utils/calculations';
 import { formatDateForInput } from '../../utils/formatters';
 import { useTranslation } from '../../i18n';
-import styles from './Settings.module.css';
+import styles from './InitialFunds.module.css';
 
 interface CheckpointDialogProps {
   onClose: () => void;
