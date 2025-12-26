@@ -32,6 +32,9 @@ interface ExcelTranslations {
   amountTypeFixed: string;
   amountTypePercentage: string;
   currencySymbol: string;
+  checkpoint: string;
+  checkpointDate: string;
+  checkpointBalance: string;
 }
 
 export function exportToExcel(
@@ -114,6 +117,15 @@ function createSummarySheet(
     [translations.totalPayments, formatCurrency(stats.totalPayments)],
     [translations.finalBalance, formatCurrency(stats.finalBalance)]
   );
+
+  if (state.checkpoint) {
+    data.push(
+      [''],
+      [translations.checkpoint],
+      [translations.checkpointDate, formatDate(state.checkpoint.date)],
+      [translations.checkpointBalance, formatCurrency(state.checkpoint.balance)]
+    );
+  }
 
   const worksheet = XLSX.utils.aoa_to_sheet(data);
 

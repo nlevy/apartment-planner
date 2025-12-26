@@ -1,4 +1,4 @@
-import { InitialFunds, Transaction, TimelineEntry, PriceConfig } from '../types';
+import { InitialFunds, Transaction, TimelineEntry, PriceConfig, Checkpoint } from '../types';
 
 export function calculateTotalInitialFunds(funds: InitialFunds): number {
   return Object.values(funds).reduce((sum, value) => sum + value, 0);
@@ -33,16 +33,22 @@ interface TimelineTranslations {
   payment: string;
 }
 
+interface TimelineTranslationsExtended extends TimelineTranslations {
+  checkpoint?: string;
+}
+
 export function generateTimeline(
   initialFunds: InitialFunds,
   transactions: Transaction[],
   priceConfig: PriceConfig,
-  translations?: TimelineTranslations
+  translations?: TimelineTranslationsExtended,
+  checkpoint?: Checkpoint
 ): TimelineEntry[] {
   const t = translations || {
     initialBalance: 'יתרה התחלתית',
     income: 'הכנסה',
-    payment: 'תשלום'
+    payment: 'תשלום',
+    checkpoint: 'נקודת ביקורת'
   };
   const entries: TimelineEntry[] = [];
 
@@ -91,7 +97,8 @@ export function generateTimeline(
       date: new Date(),
       description: t.initialBalance,
       amount: totalInitial,
-      runningBalance: balance
+      runningBalance: balance,
+      isArchived: checkpoint ? new Date().getTime() < checkpoint.date.getTime() : false
     });
     return entries;
   }
@@ -100,22 +107,56 @@ export function generateTimeline(
   const sorted = expandedEntries.sort((a, b) => a.date.getTime() - b.date.getTime());
   const firstDate = sorted[0]?.date || new Date();
 
-  entries.push({
+  const initialEntry = {
     date: new Date(firstDate.getTime() - 1),
     description: t.initialBalance,
     amount: totalInitial,
-    runningBalance: balance
-  });
+    runningBalance: balance,
+    isArchived: checkpoint ? new Date(firstDate.getTime() - 1).getTime() < checkpoint.date.getTime() : false
+  };
+  entries.push(initialEntry);
 
-  for (const entry of sorted) {
+  let checkpointInserted = false;
+
+  for (let i = 0; i < sorted.length; i++) {
+    const entry = sorted[i];
+
+    // Check if we should insert checkpoint before this entry
+    if (checkpoint && !checkpointInserted && entry.date.getTime() >= checkpoint.date.getTime()) {
+      // Insert checkpoint entry
+      entries.push({
+        date: checkpoint.date,
+        description: t.checkpoint || 'נקודת ביקורת',
+        amount: checkpoint.balance - balance,
+        runningBalance: checkpoint.balance,
+        isCheckpoint: true
+      });
+      balance = checkpoint.balance;
+      checkpointInserted = true;
+    }
+
     balance += entry.amount;
+
+    const isBeforeCheckpoint = checkpoint && !checkpointInserted;
 
     entries.push({
       date: entry.date,
       description: entry.description,
       category: entry.category,
       amount: entry.amount,
-      runningBalance: balance
+      runningBalance: balance,
+      isArchived: isBeforeCheckpoint
+    });
+  }
+
+  // If checkpoint is after all transactions, insert it at the end
+  if (checkpoint && !checkpointInserted) {
+    entries.push({
+      date: checkpoint.date,
+      description: t.checkpoint || 'נקודת ביקורת',
+      amount: checkpoint.balance - balance,
+      runningBalance: checkpoint.balance,
+      isCheckpoint: true
     });
   }
 

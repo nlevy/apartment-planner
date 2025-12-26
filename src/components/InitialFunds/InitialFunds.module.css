@@ -105,3 +105,116 @@
   min-width: 28px;
   height: 28px;
 }
+
+.checkpointSection {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.createCheckpointButton {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: #FF9800;
+  color: white;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.createCheckpointButton:hover:not(:disabled) {
+  background-color: #F57C00;
+}
+
+.createCheckpointButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkpointInfo {
+  background-color: var(--color-background);
+  border: 1px solid #FF9800;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm);
+}
+
+.checkpointHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.checkpointIcon {
+  font-size: 16px;
+}
+
+.checkpointTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FF9800;
+}
+
+.checkpointDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+.checkpointDetail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.checkpointLabel {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.checkpointActions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.updateCheckpointButton {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: transparent;
+  color: #FF9800;
+  border: 1px solid #FF9800;
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.updateCheckpointButton:hover {
+  background-color: #FF9800;
+  color: white;
+}
+
+.clearCheckpointButton {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: transparent;
+  color: var(--color-payment);
+  border: 1px solid var(--color-payment);
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.clearCheckpointButton:hover {
+  background-color: var(--color-payment);
+  color: white;
+}

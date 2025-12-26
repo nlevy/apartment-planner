@@ -36,10 +36,18 @@ export interface TimelineEntry {
   amount: number;
   category?: string;
   runningBalance: number;
+  isArchived?: boolean;
+  isCheckpoint?: boolean;
+}
+
+export interface Checkpoint {
+  date: Date;
+  balance: number;
 }
 
 export interface AppState {
   priceConfig: PriceConfig;
   initialFunds: InitialFunds;
   transactions: Transaction[];
+  checkpoint?: Checkpoint;
 }

@@ -73,8 +73,10 @@ export const BalanceGraph: React.FC = () => {
     {
       initialBalance: t('timeline.initialBalance'),
       income: t('transactions.income'),
-      payment: t('transactions.payment')
-    }
+      payment: t('transactions.payment'),
+      checkpoint: t('timeline.checkpoint')
+    },
+    state.checkpoint
   );
 
   if (timeline.length === 0) {
@@ -93,8 +95,14 @@ export const BalanceGraph: React.FC = () => {
     dateFormatted: formatDate(entry.date),
     balance: entry.runningBalance,
     description: entry.description,
-    runningBalance: entry.runningBalance
+    runningBalance: entry.runningBalance,
+    isCheckpoint: entry.isCheckpoint
   }));
+
+  const checkpointIndex = state.checkpoint
+    ? chartData.findIndex(d => d.isCheckpoint)
+    : -1;
+  const checkpointEntry = checkpointIndex >= 0 ? chartData[checkpointIndex] : undefined;
 
   const minBalance = Math.min(...timeline.map((e) => e.runningBalance));
   const maxBalance = Math.max(...timeline.map((e) => e.runningBalance));
@@ -211,12 +219,58 @@ export const BalanceGraph: React.FC = () => {
               formatter={() => t('graph.balance')}
             />
             <ReferenceLine y={0} stroke="#F44336" strokeDasharray="3 3" />
+            {checkpointEntry && xAxisMode === 'date' && (
+              <ReferenceLine
+                x={checkpointEntry.timestamp}
+                stroke="#FF9800"
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                label={{ value: '📍', position: 'top', fill: '#FF9800', fontSize: 20 }}
+              />
+            )}
             <Line
               type="monotone"
               dataKey="balance"
               stroke="#2196F3"
               strokeWidth={2}
-              dot={{ fill: '#2196F3', r: 4 }}
+              dot={(props: any) => {
+                const { cx, cy, index } = props;
+                const isCheckpointDot = index === checkpointIndex;
+
+                if (isCheckpointDot) {
+                  return (
+                    <g>
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={8}
+                        fill="#FF9800"
+                        stroke="#FF9800"
+                        strokeWidth={2}
+                      />
+                      <text
+                        x={cx}
+                        y={cy - 15}
+                        textAnchor="middle"
+                        fill="#FF9800"
+                        fontSize={20}
+                      >
+                        📍
+                      </text>
+                    </g>
+                  );
+                }
+
+                return (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={4}
+                    fill="#2196F3"
+                    stroke="#2196F3"
+                  />
+                );
+              }}
               activeDot={{ r: 6 }}
               name={t('graph.balance')}
             />
