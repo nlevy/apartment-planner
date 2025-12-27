@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
-import { formatDate } from '../../utils/formatters';
+import { useDateFormatter } from '../../utils/useDateFormatter';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
 import { useLocale } from '../../context/LocaleContext';
@@ -31,9 +31,10 @@ interface CustomTooltipProps {
     };
   }>;
   formatCurrency: (amount: number) => string;
+  formatDate: (date: Date) => string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, formatCurrency }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, formatCurrency, formatDate }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -63,6 +64,7 @@ export const BalanceGraph: React.FC = () => {
   const { state } = useAppContext();
   const { t } = useTranslation();
   const { formatCurrency } = useCurrencyFormatter();
+  const { formatDate } = useDateFormatter();
   const { language } = useLocale();
   const [xAxisMode, setXAxisMode] = useState<XAxisMode>('event');
 
@@ -138,47 +140,32 @@ export const BalanceGraph: React.FC = () => {
     setXAxisMode((prev) => (prev === 'event' ? 'date' : 'event'));
   };
 
+  const toggleLabels = [
+    { mode: 'event' as XAxisMode, label: t('common.event') },
+    { mode: 'date' as XAxisMode, label: t('common.date') }
+  ];
+
+  const orderedLabels = language === 'he' ? [...toggleLabels].reverse() : toggleLabels;
+
   return (
     <div className={styles.container}>
       <div className={styles.controls}>
         <div className={styles.toggleContainer}>
-          {language === 'he' ? (
-            <>
-              <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
-                {t('common.date')}
-              </span>
-              <label className={styles.toggleSwitch}>
-                <input
-                  type="checkbox"
-                  checked={xAxisMode === 'date'}
-                  onChange={toggleXAxisMode}
-                  className={styles.toggleInput}
-                />
-                <span className={styles.toggleSlider}></span>
-              </label>
-              <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
-                {t('common.event')}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className={`${styles.toggleLabel} ${xAxisMode === 'event' ? styles.active : ''}`}>
-                {t('common.event')}
-              </span>
-              <label className={styles.toggleSwitch}>
-                <input
-                  type="checkbox"
-                  checked={xAxisMode === 'date'}
-                  onChange={toggleXAxisMode}
-                  className={styles.toggleInput}
-                />
-                <span className={styles.toggleSlider}></span>
-              </label>
-              <span className={`${styles.toggleLabel} ${xAxisMode === 'date' ? styles.active : ''}`}>
-                {t('common.date')}
-              </span>
-            </>
-          )}
+          <span className={`${styles.toggleLabel} ${xAxisMode === orderedLabels[0].mode ? styles.active : ''}`}>
+            {orderedLabels[0].label}
+          </span>
+          <label className={styles.toggleSwitch}>
+            <input
+              type="checkbox"
+              checked={xAxisMode === 'date'}
+              onChange={toggleXAxisMode}
+              className={styles.toggleInput}
+            />
+            <span className={styles.toggleSlider}></span>
+          </label>
+          <span className={`${styles.toggleLabel} ${xAxisMode === orderedLabels[1].mode ? styles.active : ''}`}>
+            {orderedLabels[1].label}
+          </span>
         </div>
       </div>
       <div className={styles.graphWrapper}>
@@ -213,7 +200,7 @@ export const BalanceGraph: React.FC = () => {
               width={65}
               tick={{ dx: -5 }}
             />
-            <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} />} />
+            <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} formatDate={formatDate} />} />
             <Legend
               wrapperStyle={{ fontSize: '12px' }}
               formatter={() => t('graph.balance')}
@@ -239,7 +226,7 @@ export const BalanceGraph: React.FC = () => {
 
                 if (isCheckpointDot) {
                   return (
-                    <g>
+                    <g key={index}>
                       <circle
                         cx={cx}
                         cy={cy}
@@ -263,6 +250,7 @@ export const BalanceGraph: React.FC = () => {
 
                 return (
                   <circle
+                    key={index}
                     cx={cx}
                     cy={cy}
                     r={4}

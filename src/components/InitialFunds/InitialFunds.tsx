@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { calculateTotalInitialFunds } from '../../utils/calculations';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
+import { useDateFormatter } from '../../utils/useDateFormatter';
 import { useTranslation } from '../../i18n';
 import { CheckpointDialog } from './CheckpointDialog';
-import { formatDate } from '../../utils/formatters';
 import styles from './InitialFunds.module.css';
 
 export const InitialFunds: React.FC = () => {
   const { state, updateInitialFunds, clearCheckpoint } = useAppContext();
   const { t, translateInitialFundsCategory } = useTranslation();
   const { formatCurrency } = useCurrencyFormatter();
+  const { formatDate } = useDateFormatter();
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [showCheckpointDialog, setShowCheckpointDialog] = useState(false);

@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import { AppState, TimelineEntry } from '../types';
 import { formatDate } from './formatters';
 import { calculateSummaryStats } from './calculations';
+import { Language } from '../i18n/types';
 
 interface ExcelTranslations {
   appTitle: string;
@@ -41,6 +42,7 @@ export function exportToExcel(
   timeline: TimelineEntry[],
   state: AppState,
   translations: ExcelTranslations,
+  language: Language = 'he',
   filename = 'apartment-plan.xlsx'
 ): void {
   // Helper functions to format currency with the provided symbol
@@ -72,13 +74,13 @@ export function exportToExcel(
 
   const workbook = XLSX.utils.book_new();
 
-  const summarySheet = createSummarySheet(state, translations, formatCurrency);
+  const summarySheet = createSummarySheet(state, translations, formatCurrency, language);
   XLSX.utils.book_append_sheet(workbook, summarySheet, translations.summary);
 
-  const timelineSheet = createTimelineSheet(timeline, translations, formatCurrency, formatCurrencyWithSign);
+  const timelineSheet = createTimelineSheet(timeline, translations, formatCurrency, formatCurrencyWithSign, language);
   XLSX.utils.book_append_sheet(workbook, timelineSheet, translations.timeline);
 
-  const transactionsSheet = createTransactionsSheet(state, translations, formatCurrency);
+  const transactionsSheet = createTransactionsSheet(state, translations, formatCurrency, language);
   XLSX.utils.book_append_sheet(workbook, transactionsSheet, translations.transactions);
 
   XLSX.writeFile(workbook, filename);
@@ -87,7 +89,8 @@ export function exportToExcel(
 function createSummarySheet(
   state: AppState,
   translations: ExcelTranslations,
-  formatCurrency: (amount: number) => string
+  formatCurrency: (amount: number) => string,
+  language: Language
 ): XLSX.WorkSheet {
   const stats = calculateSummaryStats(
     state.initialFunds,
@@ -122,7 +125,7 @@ function createSummarySheet(
     data.push(
       [''],
       [translations.checkpoint],
-      [translations.checkpointDate, formatDate(state.checkpoint.date)],
+      [translations.checkpointDate, formatDate(state.checkpoint.date, language)],
       [translations.checkpointBalance, formatCurrency(state.checkpoint.balance)]
     );
   }
@@ -141,7 +144,8 @@ function createTimelineSheet(
   timeline: TimelineEntry[],
   translations: ExcelTranslations,
   formatCurrency: (amount: number) => string,
-  formatCurrencyWithSign: (amount: number) => string
+  formatCurrencyWithSign: (amount: number) => string,
+  language: Language
 ): XLSX.WorkSheet {
   const headers = [
     translations.date,
@@ -152,7 +156,7 @@ function createTimelineSheet(
   ];
 
   const data = timeline.map(entry => [
-    formatDate(entry.date),
+    formatDate(entry.date, language),
     entry.description,
     entry.category || '-',
     formatCurrencyWithSign(entry.amount),
@@ -175,7 +179,8 @@ function createTimelineSheet(
 function createTransactionsSheet(
   state: AppState,
   translations: ExcelTranslations,
-  formatCurrency: (amount: number) => string
+  formatCurrency: (amount: number) => string,
+  language: Language
 ): XLSX.WorkSheet {
   const headers = [
     translations.date,
@@ -206,7 +211,7 @@ function createTransactionsSheet(
     }
 
     return [
-      formatDate(transaction.date),
+      formatDate(transaction.date, language),
       typeLabel,
       transaction.description || '-',
       transaction.category || '-',

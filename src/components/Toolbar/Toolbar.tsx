@@ -6,12 +6,14 @@ import { downloadJSON, importFromJSON } from '../../utils/storage';
 import { Settings } from '../Settings/Settings';
 import { useTranslation } from '../../i18n';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
+import { useLocale } from '../../context/LocaleContext';
 import styles from './Toolbar.module.css';
 
 export const Toolbar: React.FC = () => {
   const { state, loadState, resetState } = useAppContext();
   const { t } = useTranslation();
   const { currencySymbol } = useCurrencyFormatter();
+  const { language } = useLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportExcel = () => {
@@ -60,7 +62,7 @@ export const Toolbar: React.FC = () => {
       checkpointBalance: t('checkpoint.currentBalance'),
     };
 
-    exportToExcel(timeline, state, excelTranslations);
+    exportToExcel(timeline, state, excelTranslations, language);
   };
 
   const handleExportJSON = () => {

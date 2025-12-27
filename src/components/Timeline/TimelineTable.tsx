@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { generateTimeline } from '../../utils/calculations';
-import { formatDate } from '../../utils/formatters';
+import { useDateFormatter } from '../../utils/useDateFormatter';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { useTranslation } from '../../i18n';
 import styles from './Timeline.module.css';
@@ -10,6 +10,7 @@ export const TimelineTable: React.FC = () => {
   const { state } = useAppContext();
   const { t, translateCategory } = useTranslation();
   const { formatCurrency, formatCurrencyWithSign } = useCurrencyFormatter();
+  const { formatDate } = useDateFormatter();
 
   const timeline = generateTimeline(
     state.initialFunds,

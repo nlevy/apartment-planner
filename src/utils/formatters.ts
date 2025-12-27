@@ -1,38 +1,16 @@
 import { format as dateFnsFormat } from 'date-fns';
-import { he } from 'date-fns/locale';
+import { he, enUS } from 'date-fns/locale';
+import { Language } from '../i18n/types';
 
-export function formatCurrency(amount: number): string {
-  const formatted = new Intl.NumberFormat('he-IL', {
-    style: 'decimal',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(Math.abs(amount));
-
-  const sign = amount < 0 ? '-' : '';
-  return `${sign}${formatted}₪`;
+export function formatDate(date: Date, language: Language = 'he'): string {
+  const locale = language === 'he' ? he : enUS;
+  return dateFnsFormat(date, 'dd/MM/yyyy', { locale });
 }
 
-export function formatCurrencyWithSign(amount: number): string {
-  const formatted = new Intl.NumberFormat('he-IL', {
-    style: 'decimal',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(Math.abs(amount));
-
-  if (amount > 0) {
-    return `+${formatted}₪`;
-  } else if (amount < 0) {
-    return `-${formatted}₪`;
-  }
-  return `${formatted}₪`;
-}
-
-export function formatDate(date: Date): string {
-  return dateFnsFormat(date, 'dd/MM/yyyy', { locale: he });
-}
-
-export function formatDateLong(date: Date): string {
-  return dateFnsFormat(date, 'dd MMMM yyyy', { locale: he });
+export function formatDateLong(date: Date, language: Language = 'he'): string {
+  const locale = language === 'he' ? he : enUS;
+  const pattern = language === 'he' ? 'dd MMMM yyyy' : 'MMMM dd, yyyy';
+  return dateFnsFormat(date, pattern, { locale });
 }
 
 export function parseDate(dateString: string): Date {

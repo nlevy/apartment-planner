@@ -8,11 +8,12 @@ const CURRENCY_SYMBOLS: Record<Currency, string> = {
 };
 
 export function useCurrencyFormatter() {
-  const { currency } = useLocale();
+  const { currency, language } = useLocale();
   const symbol = CURRENCY_SYMBOLS[currency];
+  const locale = language === 'he' ? 'he-IL' : 'en-US';
 
   const formatCurrency = (amount: number): string => {
-    const formatted = new Intl.NumberFormat('he-IL', {
+    const formatted = new Intl.NumberFormat(locale, {
       style: 'decimal',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
@@ -23,7 +24,7 @@ export function useCurrencyFormatter() {
   };
 
   const formatCurrencyWithSign = (amount: number): string => {
-    const formatted = new Intl.NumberFormat('he-IL', {
+    const formatted = new Intl.NumberFormat(locale, {
       style: 'decimal',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0

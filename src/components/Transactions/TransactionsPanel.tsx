@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { Transaction } from '../../types';
 import { TransactionForm } from './TransactionForm';
-import { formatDate, formatPercentage } from '../../utils/formatters';
+import { formatPercentage } from '../../utils/formatters';
+import { useDateFormatter } from '../../utils/useDateFormatter';
 import { useCurrencyFormatter } from '../../utils/useCurrencyFormatter';
 import { sortTransactionsByDate, calculateTransactionAmount } from '../../utils/calculations';
 import { useTranslation } from '../../i18n';
@@ -12,6 +13,7 @@ export const TransactionsPanel: React.FC = () => {
   const { state, addTransaction, updateTransaction, deleteTransaction } = useAppContext();
   const { t, translateCategory } = useTranslation();
   const { formatCurrency } = useCurrencyFormatter();
+  const { formatDate } = useDateFormatter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>();
 
